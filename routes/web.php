@@ -25,8 +25,11 @@ Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name(
 // Product detail page
 Route::get('/product/{product:slug}', [ProductController::class, 'show'])->name('product.show');
 
-// Category page (ADD THIS)
+// Category page
 Route::get('/category/{category:slug}', [App\Http\Controllers\CategoryController::class, 'show'])->name('category.show');
+
+// Search route (ADD THIS)
+Route::get('/search', [ProductController::class, 'search'])->name('product.search');
 
 // Authentication routes
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
