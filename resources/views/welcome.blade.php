@@ -10,9 +10,11 @@
 <div class="mb-8">
     <h2 class="text-2xl font-bold mb-4">Shop by Category</h2>
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-        @foreach(\App\Models\Category::all() as $category)
-            <a href="#" class="bg-white p-4 rounded-lg shadow hover:shadow-lg transition text-center">
-                <h3 class="font-semibold text-gray-800">{{ $category->name }}</h3>
+        @foreach(\App\Models\Category::withCount('products')->get() as $category)
+            <a href="{{ route('category.show', $category->slug) }}" 
+               class="bg-white p-6 rounded-lg shadow hover:shadow-lg transition text-center group">
+                <h3 class="font-semibold text-gray-800 group-hover:text-blue-600">{{ $category->name }}</h3>
+                <p class="text-sm text-gray-500 mt-1">{{ $category->products_count }} products</p>
             </a>
         @endforeach
     </div>
@@ -62,46 +64,48 @@
         </ul>
     @endif
 </div>
+<!--      ---->
 
-
-<!-- Featured Products -->
-<div>
-    <h2 class="text-2xl font-bold mb-4">Featured Products</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        @foreach(\App\Models\Product::take(8)->get() as $product)
-            <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
-                <!-- Product Image Placeholder -->
-                <div class="bg-gray-200 h-48 rounded-t-lg flex items-center justify-center">
-                    <span class="text-gray-400 text-4xl">📦</span>
-                </div>
+@foreach(\App\Models\Product::take(8)->get() as $product)
+    <div class="bg-white rounded-lg shadow hover:shadow-lg transition">
+        <!-- Make image clickable -->
+        <a href="{{ route('product.show', $product->slug) }}">
+            <div class="bg-gray-200 h-48 rounded-t-lg flex items-center justify-center">
+                <span class="text-gray-400 text-4xl">📦</span>
+            </div>
+        </a>
+        
+        <!-- Product Info -->
+        <div class="p-4">
+            <!-- Make title clickable -->
+            <a href="{{ route('product.show', $product->slug) }}">
+                <h3 class="font-semibold text-gray-800 mb-2 hover:text-blue-600">{{ $product->name }}</h3>
+            </a>
+            <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ Str::limit($product->description, 60) }}</p>
+            
+            <div class="flex justify-between items-center mt-4">
+                <span class="text-2xl font-bold text-blue-600">${{ number_format($product->price, 2) }}</span>
                 
-                <!-- Product Info -->
-                <div class="p-4">
-                    <h3 class="font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
-                    <p class="text-gray-600 text-sm mb-2 line-clamp-2">{{ Str::limit($product->description, 60) }}</p>
-                    
-                    <div class="flex justify-between items-center mt-4">
-                        <span class="text-2xl font-bold text-blue-600">${{ number_format($product->price, 2) }}</span>
-                        <!-- Update Add to Cart Button -->
-                        <form action="{{ route('cart.add', $product) }}" method="POST">
+                <!-- Add to Cart Button -->
+                <form action="{{ route('cart.add', $product) }}" method="POST">
                     @csrf
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                     Add to Cart
+                        Add to Cart
                     </button>
-                    </form>
-                    </div>
-                    
-                    <!-- Stock Info -->
-                    <p class="text-sm text-gray-500 mt-2">
-                        @if($product->stock > 0)
-                            In Stock: {{ $product->stock }} available
-                        @else
-                            <span class="text-red-500">Out of Stock</span>
-                        @endif
-                    </p>
-                </div>
+                </form>
             </div>
-        @endforeach
+            
+            <!-- Stock Info -->
+            <p class="text-sm text-gray-500 mt-2">
+                @if($product->stock > 0)
+                    In Stock: {{ $product->stock }} available
+                @else
+                    <span class="text-red-500">Out of Stock</span>
+                @endif
+            </p>
+        </div>
+    </div>
+@endforeach
     </div>
 </div>
 @endsection
