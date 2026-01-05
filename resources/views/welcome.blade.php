@@ -18,6 +18,52 @@
     </div>
 </div>
 
+<!-- View Order History 2 Option bellow -->
+<!-- 1  --->
+
+<!--
+<div class="mt-6 bg-white shadow rounded-lg p-6">
+    <h2 class="text-xl font-bold mb-2">My Orders</h2>
+    <p class="text-gray-600 mb-4">
+        View all your past orders and order details.
+    </p>
+
+    <a href="{{ route('orders.index') }}"
+       class="inline-block bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
+        View Orders
+    </a>
+</div>
+-->
+
+<!-- 2 Option -->
+
+@php
+    $recentOrders = \App\Models\Order::where('user_id', auth()->id())
+        ->latest()
+        ->take(3)
+        ->get();
+@endphp
+
+<div class="mt-6 bg-white shadow rounded-lg p-6">
+    <h2 class="text-xl font-bold mb-4">Recent Orders</h2>
+
+    @if($recentOrders->isEmpty())
+        <p class="text-gray-600">No orders yet.</p>
+    @else
+        <ul class="space-y-2">
+            @foreach($recentOrders as $order)
+                <li class="flex justify-between">
+                    <span>#{{ $order->id }} — {{ strtoupper($order->status) }}</span>
+                    <a href="{{ route('orders.show', $order) }}" class="text-blue-600">
+                        View
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    @endif
+</div>
+
+
 <!-- Featured Products -->
 <div>
     <h2 class="text-2xl font-bold mb-4">Featured Products</h2>
@@ -36,9 +82,13 @@
                     
                     <div class="flex justify-between items-center mt-4">
                         <span class="text-2xl font-bold text-blue-600">${{ number_format($product->price, 2) }}</span>
-                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                            Add to Cart
-                        </button>
+                        <!-- Update Add to Cart Button -->
+                        <form action="{{ route('cart.add', $product) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                     Add to Cart
+                    </button>
+                    </form>
                     </div>
                     
                     <!-- Stock Info -->

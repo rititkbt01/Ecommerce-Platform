@@ -39,6 +39,7 @@ class AuthController extends Controller
         return redirect('/')->with('success', 'Registration successful!');
     }
 
+   
     // Show login form
     public function showLogin()
     {

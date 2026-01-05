@@ -16,14 +16,53 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     @auth
-                        <span class="text-gray-700">Hello, {{ Auth::user()->name }}!</span>
-                        <form action="{{ route('logout') }}" method="POST" class="inline">
-                            @csrf
-                            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                                Logout
-                            </button>
-                        </form>
-                    @else
+    <!-- Logged In Users -->
+    <span class="text-gray-700">Hello, {{ Auth::user()->name }}!</span>
+    
+    <!-- My Orders Link -->
+    <a href="{{ route('orders.index') }}" class="text-gray-700 hover:text-blue-600">
+        My Orders
+    </a>
+    
+    <!-- Cart Link with Badge -->
+    <a href="{{ route('cart.index') }}" class="relative text-gray-700 hover:text-blue-600">
+        🛒 Cart
+        @if(session('cart') && count(session('cart')) > 0)
+            <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {{ count(session('cart')) }}
+            </span>
+        @endif
+    </a>
+    
+    <!-- Admin Panel Button (Only for Admins) -->
+    @if(Auth::user()->role === 'admin')
+        <a href="{{ route('admin.dashboard') }}" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">
+            Admin Panel
+        </a>
+    @endif
+    
+    <!-- Logout Button -->
+    <form action="{{ route('logout') }}" method="POST" class="inline">
+        @csrf
+        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            Logout
+        </button>
+    </form>
+@else
+
+
+                        <!-- Guest Users -->
+                        
+                        <!-- Cart Link with Badge (for guests too) -->
+                        <a href="{{ route('cart.index') }}" class="relative text-gray-700 hover:text-blue-600">
+                            🛒 Cart
+                            @if(session('cart') && count(session('cart')) > 0)
+                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                    {{ count(session('cart')) }}
+                                </span>
+                            @endif
+                        </a>
+                        
                         <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600">Login</a>
                         <a href="{{ route('register') }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                             Register
@@ -39,6 +78,14 @@
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                 {{ session('success') }}
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ session('error') }}
             </div>
         </div>
     @endif
