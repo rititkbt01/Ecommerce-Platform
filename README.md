@@ -21,6 +21,9 @@ ShopEase is a modern e-commerce platform that demonstrates professional Laravel 
 - **Checkout System** - Complete order placement with validation
 - **Order History** - Track all past orders and their status
 - **Search Functionality** - Search products by name or description
+- **User Authentication** (Register, Login, Logout) - Built from scratch
+- **Google OAuth Sign-In** - Quick registration/login with Google account
+- **Product Browsing** - View products by category or search
 
 ### 🔐 Admin Features
 - **Admin Dashboard** - Overview with key statistics (products, orders, revenue)
@@ -143,6 +146,23 @@ DB_PORT=3306
 DB_DATABASE=shopease
 DB_USERNAME=root
 DB_PASSWORD=
+```
+5. **Configure Google OAuth (Optional)**
+
+To enable Google Sign-In:
+
+a. Create Google OAuth credentials:
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project
+   - Enable Google+ API
+   - Create OAuth 2.0 credentials
+   - Add authorized redirect URI: `http://127.0.0.1:8000/auth/google/callback`
+
+b. Add to `.env`:
+```env
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
 ```
 
 5. **Run migrations and seeders**
