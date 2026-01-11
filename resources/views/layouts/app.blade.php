@@ -36,7 +36,13 @@
             <div class="flex items-center space-x-4">
                 @auth
                     <!-- Logged In Users -->
-                    <span class="text-gray-700">Hello, {{ Auth::user()->name }}!</span>
+                    <div class="flex items-center gap-2">
+                        @if(Auth::user()->avatar)
+                            <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" 
+                                 class="w-8 h-8 rounded-full border-2 border-gray-300">
+                        @endif
+                        <span class="text-gray-700">Hello, {{ Auth::user()->name }}!</span>
+                    </div>
                     
                     <!-- My Orders Link -->
                     <a href="{{ route('orders.index') }}" class="text-gray-700 hover:text-blue-600">

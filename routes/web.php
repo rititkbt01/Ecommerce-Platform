@@ -81,3 +81,8 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::patch('/admin/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
+
+
+// Google OAuth routes
+Route::get('/auth/google', [App\Http\Controllers\GoogleAuthController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/auth/google/callback', [App\Http\Controllers\GoogleAuthController::class, 'handleGoogleCallback'])->name('google.callback');
